@@ -1,4 +1,4 @@
-package com.afterecho.gradle
+package com.afterecho.plugin
 
 class BlogPluginExtension {
     String words

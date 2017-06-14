@@ -1,4 +1,4 @@
-package com.afterecho.gradle
+package com.afterecho.plugin
 
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.TypeSpec

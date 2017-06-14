@@ -1,5 +1,7 @@
-package com.afterecho.gradle
+package com.afterecho.plugin
 
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.LibraryPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -22,7 +24,19 @@ class BlogPlugin implements Plugin<Project> {
 
             target.tasks.create(name: "showDevices", type: ShowDevicesTask)
 
-            target.android.applicationVariants.all { variant ->
+
+            def hasApp = target.plugins.withType(AppPlugin)
+            def hasLib = target.plugins.withType(LibraryPlugin)
+
+            final def variants
+            if (hasApp) {
+                variants = target.android.applicationVariants
+            } else {
+                variants = target.android.libraryVariants
+            }
+
+
+            variants.all { variant ->
                 File inputWordFile = new File(target.projectDir, target.extensions.bpplugin.words)
                 File outputDir = new File(target.buildDir, "generated/source/wordsToEnum/${variant.dirName}")
                 def task = target.tasks.create(name: "wordsToEnum${variant.name.capitalize()}", type: WordsToEnumTask) {
@@ -35,5 +49,7 @@ class BlogPlugin implements Plugin<Project> {
                 variant.registerJavaGeneratingTask task, outputDir
             }
         }
+
+        target.android.registerTransform(new BlogTransform())
     }
 }

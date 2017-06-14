@@ -1,4 +1,4 @@
-package com.afterecho.gradle
+package com.afterecho.plugin
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
