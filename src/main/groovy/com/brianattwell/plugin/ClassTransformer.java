@@ -7,7 +7,6 @@ import javassist.build.IClassTransformer;
 import javassist.build.JavassistBuildException;
 
 import static com.brianattwell.plugin.utils.ClassInjectUtil.getOnCreateMethod;
-import static com.brianattwell.plugin.utils.ClassInjectUtil.insertLog;
 import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isActivity;
 import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isFragment;
 
@@ -16,12 +15,11 @@ public class ClassTransformer implements IClassTransformer {
     @Override
     public void applyTransformations(CtClass ctClass) throws JavassistBuildException {
         System.out.println(":plugin:applyTransformations on " + ctClass.getName());
+        System.out.println(":plugin:applyTransformations on " + ctClass.getName());
         try {
-            if (isAnActivity(ctClass)) {
-                CtMethod[] methods = getOnCreateMethod(ctClass);
-                for (CtMethod method : methods) {
-                    insertLog(method);
-                }
+            CtMethod[] methods = getOnCreateMethod(ctClass);
+            for (CtMethod method : methods) {
+                method.insertAfter("android.util.Log.d(\"MOO\", \"I am inserted code!\");");
             }
         } catch (Exception e) {
             throw new JavassistBuildException(e);

@@ -10,16 +10,16 @@ import org.gradle.api.Project;
 public class ByteManipulationPlugin extends AbstractMorpheusPlugin {
     @Override
     protected Class getPluginExtension() {
-        return null;
+        return null
     }
 
     @Override
     protected String getExtension() {
-        return null;
+        return null
     }
 
     @Override
     public IClassTransformer[] getTransformers(Project project) {
-        return new IClassTransformer[]{new ClassTransformer()};
+        return new ClassTransformer()
     }
 }

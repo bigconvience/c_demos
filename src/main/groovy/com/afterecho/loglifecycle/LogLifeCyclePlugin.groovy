@@ -20,11 +20,6 @@ class LogLifeCyclePlugin extends AbstractMorpheusPlugin {
     }
 
     @Override
-    public boolean skipVariant(def variant) {
-        return variant.name.contains('release')
-    }
-
-    @Override
     public IClassTransformer[] getTransformers(Project project) {
         return new LogLifeCycleProcessor()
     }

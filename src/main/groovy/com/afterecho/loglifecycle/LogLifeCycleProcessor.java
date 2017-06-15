@@ -1,24 +1,16 @@
 package com.afterecho.loglifecycle;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javassist.*;
 import javassist.build.IClassTransformer;
 import javassist.build.JavassistBuildException;
 import javassist.bytecode.AccessFlag;
 import javassist.bytecode.ClassFile;
-import javassist.bytecode.FieldInfo;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.brianattwell.plugin.utils.ClassInjectUtil.insertLog;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isActivity;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isApplication;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isBroadCastReceiver;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isContentProvider;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isFragment;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isService;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isSupportFragment;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isView;
+import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.*;
 
 /**
  * A class transformer to inject logging byte code for all life cycle methods.
@@ -80,12 +72,6 @@ public class LogLifeCycleProcessor implements IClassTransformer {
 
     private void debugLifeCycleMethods(CtClass classToTransform, CtMethod[] methods)
             throws CannotCompileException, NotFoundException {
-        ClassFile cf = classToTransform.getClassFile();
-
-//        FieldInfo f = new FieldInfo(cf.getConstPool(), "injectTime", "J");
-//        f.setAccessFlags(AccessFlag.PRIVATE);
-//        cf.addField(f);
-
         CtField f = new CtField(CtClass.longType, "injectTime", classToTransform);
         classToTransform.addField(f);
 
