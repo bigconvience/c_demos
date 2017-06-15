@@ -47,8 +47,9 @@ public class ClassInjectUtil {
         System.out.println(methodName);
 
         ctMethod.insertBefore("{ injectTime = System.currentTimeMillis(); }");
-
-        String methodTail = "{System.out.println(\"" + methodName + "\" + injectTime + System.currentTimeMillis());}";
+       // String methodTail = "{ System.out.println(\"" + methodName +"\" + injectTime); }";
+        String methodTail = "{ com.ali.music.api.core.util.PageTrack.getInstance().track(\"" + methodName + "\", injectTime, System.currentTimeMillis());}";
+        System.out.println(methodTail);
         ctMethod.insertAfter(methodTail);
       //  ctMethod.insertAfter("{ System.out.println(methodName + \",start:\" + injectTime + \",end:\" + System.currentTimeMillis());}");
 //            ctMethod.insertAfter("{ com.ali.music.api.core.util.PageTrack.getInstance().track(\"" + methodName + "\", injectTime, System.currentTimeMillis());}");
