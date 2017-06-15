@@ -45,8 +45,7 @@ public class LogLifeCycleProcessor implements IClassTransformer {
     public void applyTransformations(CtClass classToTransform) throws JavassistBuildException {
         String classToTransformName = classToTransform.getName();
         try {
-            System.out.println("Transforming " + classToTransformName);
-            classToTransform.defrost();
+            System.out.println("start Transforming " + classToTransformName);
             ClassPool pool = classToTransform.getClassPool();
             Set<CtMethod> methodSet = getAllLifeCycleMethods(pool, classToTransform.getName());
             debugLifeCycleMethods(classToTransform, methodSet.toArray(new CtMethod[methodSet.size()]));
@@ -79,8 +78,14 @@ public class LogLifeCycleProcessor implements IClassTransformer {
         for (CtMethod lifeCycleHook : methods) {
             String methodName = lifeCycleHook.getName();
 
+            if (lifeCycleHook.getDeclaringClass().isFrozen()) {
+                System.out.println("Skipping" + methodName + " because of  frozen");
+                continue;
+            }
+
             int accessFlags = lifeCycleHook.getMethodInfo().getAccessFlags();
             boolean isFinal = (accessFlags & AccessFlag.FINAL) == AccessFlag.FINAL;
+            System.out.println(lifeCycleHook.getLongName() + " is final: " + isFinal);
             boolean canOverride = !isFinal && (AccessFlag.isPublic(accessFlags)
                     || AccessFlag.isProtected(accessFlags)
                     || AccessFlag.isPackage(accessFlags));
