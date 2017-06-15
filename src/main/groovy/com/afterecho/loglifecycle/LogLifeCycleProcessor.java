@@ -46,6 +46,7 @@ public class LogLifeCycleProcessor implements IClassTransformer {
         String classToTransformName = classToTransform.getName();
         try {
             System.out.println("Transforming " + classToTransformName);
+            classToTransform.defrost();
             ClassPool pool = classToTransform.getClassPool();
             Set<CtMethod> methodSet = getAllLifeCycleMethods(pool, classToTransform.getName());
             debugLifeCycleMethods(classToTransform, methodSet.toArray(new CtMethod[methodSet.size()]));
