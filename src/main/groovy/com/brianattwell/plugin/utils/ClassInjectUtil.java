@@ -39,6 +39,21 @@ public class ClassInjectUtil {
         return new CtMethod[]{c1, c2};
     }
 
+    public static void insertLog(CtMethod ctMethod, String fieldName) throws CannotCompileException {
+        String methodName = ctMethod.getLongName();
+        long injectTime = System.currentTimeMillis();
+        System.out.println(methodName + ",start:" + injectTime + ",end:" + System.currentTimeMillis());
+        System.out.println(methodName);
+
+        ctMethod.insertBefore("{ " + fieldName + " = System.currentTimeMillis(); }");
+        // String methodTail = "{ System.out.println(\"" + methodName +"\" + injectTime); }";
+        String methodTail = "{ com.ali.music.api.core.util.PageTrack.getInstance().track(\"" + methodName + "\"," + fieldName + ", System.currentTimeMillis());}";
+        System.out.println(methodTail);
+        ctMethod.insertAfter(methodTail);
+        //  ctMethod.insertAfter("{ System.out.println(methodName + \",start:\" + injectTime + \",end:\" + System.currentTimeMillis());}");
+//            ctMethod.insertAfter("{ com.ali.music.api.core.util.PageTrack.getInstance().track(\"" + methodName + "\", injectTime, System.currentTimeMillis());}");
+    }
+
 
     public static void insertLog(CtMethod ctMethod) throws CannotCompileException {
         String methodName = ctMethod.getLongName();

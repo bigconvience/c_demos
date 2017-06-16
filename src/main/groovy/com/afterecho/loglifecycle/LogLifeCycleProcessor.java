@@ -4,7 +4,6 @@ import javassist.*;
 import javassist.build.IClassTransformer;
 import javassist.build.JavassistBuildException;
 import javassist.bytecode.AccessFlag;
-import javassist.bytecode.ClassFile;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +37,7 @@ public class LogLifeCycleProcessor implements IClassTransformer {
                 || isFragment(candidateClass)
                 || isSupportFragment(candidateClass)
                 || isView(candidateClass)
+                || isService(candidateClass)
                 || isApplication(candidateClass);
     }
 
@@ -72,8 +72,6 @@ public class LogLifeCycleProcessor implements IClassTransformer {
 
     private void debugLifeCycleMethods(CtClass classToTransform, CtMethod[] methods)
             throws CannotCompileException, NotFoundException {
-        CtField f = new CtField(CtClass.longType, "injectTime", classToTransform);
-        classToTransform.addField(f);
 
         for (CtMethod lifeCycleHook : methods) {
             String methodName = lifeCycleHook.getName();
@@ -92,11 +90,19 @@ public class LogLifeCycleProcessor implements IClassTransformer {
 
             if (canOverride && methodName.startsWith("on")) {
                 System.out.println("Overriding " + lifeCycleHook.getLongName());
-                try {
+                String timeFieldName = "injectTime" + Math.abs(methodName.hashCode());
+                CtField f = new CtField(CtClass.longType, timeFieldName, classToTransform);
 
-                    insertLog(lifeCycleHook);
+                try {
+                    classToTransform.addField(f);
+                    insertLog(lifeCycleHook, timeFieldName);
                     System.out.println("Override successful " + methodName);
                 } catch (Exception e) {
+                    try {
+                        classToTransform.removeField(f);
+                    } catch (Exception ex) {
+
+                    }
                     logMoreIfDebug("Override didn't work ", e);
                 }
             } else {
