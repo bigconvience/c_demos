@@ -16,9 +16,21 @@ void array_1() {
     }
 }
 
+int compute_stack_size(int *pSize) {
+    *pSize = 5;
+    
+    return 1;
+}
+
 
 int main(int argc, const char * argv[]) {
-    array_1();
+//    array_1();
+    
+    int pSize;
+    int ret = compute_stack_size(&pSize);
+    if (ret) {
+        printf("pSize:%d\n", pSize);
+    }
     return 0;
 }
 
