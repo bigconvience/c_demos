@@ -2,10 +2,11 @@
 //  main.c
 //  C Stand http://www.iso-9899.info/wiki/The_Standard
 //
-//  Created by benpeng.jiang on 2020/11/11.
+//  demos
 //
 
 #include <stdio.h>
+#include "list.h"
 
 
 void array_1() {
@@ -68,10 +69,106 @@ void macro_test1() {
     printJSValue(jsNull);
 
     const char *str= "abc";
-    JSValue atom = JS_MKPTR(JS_TAG_STRING, str);
+    JSValue atom = JS_MKPTR(JS_TAG_STRING, (void *)str);
     printJSValue(atom);
 }
 
+
+typedef struct Book {
+    int price;
+    const char *name;
+    struct list_head link;
+} Book;
+
+void list_test() {
+    printf("\nlist test--->\n");
+    struct list_head head, *sentinel = &head;
+    init_list_head(sentinel);
+    
+    Book b1 = {1, "one"};
+    init_list_head(&b1.link);
+    list_add(&b1.link, sentinel);
+
+    Book b2 = {2, "two"};
+    init_list_head(&b2.link);
+    list_add(&b2.link, sentinel);
+    
+    Book b3 = {3, "three"};
+    init_list_head(&b3.link);
+    list_add(&b3.link, sentinel);
+    
+    struct list_head *el;
+
+    list_for_each(el, sentinel) {
+        Book *book = list_entry(el, Book, link);
+        
+        printf("book, price:%d, name:%s \n", book->price, book->name);
+    }
+    
+    list_for_each_prev(el, sentinel) {
+        Book *book = list_entry(el, Book, link);
+        
+        printf("book, price:%d, name:%s \n", book->price, book->name);
+    }
+    
+    struct list_head *el1;
+    list_for_each_safe(el, el1, sentinel) {
+        Book *book = list_entry(el, Book, link);
+        
+        printf("book, price:%d, name:%s \n", book->price, book->name);
+    }
+    
+    list_for_each_prev_safe(el, el1, sentinel) {
+        Book *book = list_entry(el, Book, link);
+        
+        printf("book, price:%d, name:%s \n", book->price, book->name);
+    }
+}
+
+void list_test_tail() {
+    printf("\nlist test tail--->\n");
+    struct list_head head, *sentinel = &head;
+    init_list_head(sentinel);
+    
+    Book b1 = {1, "one"};
+    init_list_head(&b1.link);
+    list_add_tail(&b1.link, sentinel);
+
+    Book b2 = {2, "two"};
+    init_list_head(&b2.link);
+    list_add_tail(&b2.link, sentinel);
+    
+    Book b3 = {3, "three"};
+    init_list_head(&b3.link);
+    list_add_tail(&b3.link, sentinel);
+    
+    struct list_head *el;
+
+    list_for_each(el, sentinel) {
+        Book *book = list_entry(el, Book, link);
+        
+        printf("book, price:%d, name:%s \n", book->price, book->name);
+    }
+    
+    list_for_each_prev(el, sentinel) {
+        Book *book = list_entry(el, Book, link);
+        
+        printf("book, price:%d, name:%s \n", book->price, book->name);
+    }
+    
+    struct list_head *el1;
+    list_for_each_safe(el, el1, sentinel) {
+        Book *book = list_entry(el, Book, link);
+        
+        printf("book, price:%d, name:%s \n", book->price, book->name);
+    }
+    
+    list_for_each_prev_safe(el, el1, sentinel) {
+        Book *book = list_entry(el, Book, link);
+        
+        printf("book, price:%d, name:%s \n", book->price, book->name);
+    }
+}
 
 int main(int argc, const char * argv[]) {
 //    array_1();
@@ -83,6 +180,10 @@ int main(int argc, const char * argv[]) {
     }
     
     macro_test1();
+    
+    list_test();
+    list_test_tail();
+    
     return 0;
 }
 
